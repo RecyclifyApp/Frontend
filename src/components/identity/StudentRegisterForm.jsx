@@ -72,8 +72,13 @@ function InnerStudentForm({ goBack }) {
                 const responseMessage = rawResponseMessage.substring("SUCCESS: ".length).trim()
                 if (responseMessage === "Account created successfully.") {
                     localStorage.setItem('jwt', response.data.token);
-                    ShowToast("success", "Account Created!", "Please set up your Multi-Factor Authentication.")
-                    navigate("/auth/msAuth", { state: { qrCodeUrl: response.data.qrCodeUrl } })
+                    ShowToast("success", "Account created successfully!");
+                    if (response.data.qrCodeUrl) {
+                        navigate("/auth/msAuth", { state: { qrCodeUrl: response.data.qrCodeUrl } })
+                    } else {
+                        navigate("/auth/emailVerification")
+                        ShowToast("success", "Microsoft Authenticator QR Code unavailable.", "Please proceed with Email Verification.");
+                    }
                 }
             }
         } catch (err) {
