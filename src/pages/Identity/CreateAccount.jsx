@@ -83,7 +83,6 @@ function CreateAccount() {
                                 <StepsItem index={0} title="Step 1" description="Account Details" />
                                 <StepsItem index={1} title="Step 2" description="Setup MFA" />
                                 <StepsItem index={2} title="Step 3" description="Verify Email" />
-                                <StepsItem index={3} title="Step 4" description="Verify Contact" />
                             </StepsList>
                         </StepsRoot>
 
