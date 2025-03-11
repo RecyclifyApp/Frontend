@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Image } from "@chakra-ui/react";
 import { MdCardGiftcard } from "react-icons/md";
 import Server from "../../../networking";
+import ShowToast from "../../Extensions/ShowToast";
 
 const RewardItemImage = ({ rewardId }) => {
     const [imageUrl, setImageUrl] = useState(null);
@@ -24,6 +25,16 @@ const RewardItemImage = ({ rewardId }) => {
                     setImageUrl(null);
                 }
             } catch (error) {
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
+
                 console.error("Error fetching reward image:", error);
                 setImageUrl(null);
             }

@@ -70,6 +70,15 @@ function EditAvatarDialog({ userDetails, isOpen, onClose }) {
             }
         } catch (error) {
             console.error("Error updating avatar:", error);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         } finally {
             setIsSaveLoading(false);
         }
@@ -95,6 +104,15 @@ function EditAvatarDialog({ userDetails, isOpen, onClose }) {
             }
         } catch (error) {
             console.error("Error removing avatar:", error);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         } finally {
             setIsRemoveLoading(false);
         }

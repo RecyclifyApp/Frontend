@@ -29,6 +29,15 @@ function EditBannerDialog({ userDetails, isOpen, onClose }) {
             } catch (error) {
                 console.error("Error fetching banner:", error);
                 setBannerUrl(null);
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             }
         };
 
@@ -69,6 +78,15 @@ function EditBannerDialog({ userDetails, isOpen, onClose }) {
             }
         } catch (error) {
             console.error("Error updating banner:", error);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         } finally {
             setIsSaveLoading(false);
         }
@@ -94,6 +112,15 @@ function EditBannerDialog({ userDetails, isOpen, onClose }) {
             }
         } catch (error) {
             console.error("Error removing banner:", error);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         } finally {
             setIsRemoveLoading(false);
         }

@@ -24,14 +24,16 @@ function Class() {
             }
         } catch (error) {
             console.error("Error fetching classes:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error fetching class", error.response.data.message.split("UERROR: "));
-                setClassData({});
-            } else {
-                ShowToast("error", "Error fetching class", "Please try again.");
-                setClassData({});
-            }
             setClassData({});
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
     };
 
@@ -44,14 +46,16 @@ function Class() {
             }
         } catch (error) {
             console.error("Error fetching students:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error fetching students", error.response.data.message.split("UERROR: "));
-                setStudents([]);
-            } else {
-                ShowToast("error", "Error fetching students", "Please try again.");
-                setStudents([]);
-            }
             setStudents([]);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
     };
 

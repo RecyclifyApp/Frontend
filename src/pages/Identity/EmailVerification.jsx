@@ -61,13 +61,15 @@ function EmailVerification() {
                 ShowToast("success", "Email Verified!", "Your email has been successfully verified.");
                 navigateBasedOnRole();
             }
-        } catch (err) {
-            const rawErrorMessage = err.response.data.error;
-            if (rawErrorMessage.startsWith("UERROR")) {
-                const errorMessage = rawErrorMessage.substring("UERROR: ".length).trim()
-                ShowToast("error", "Verification Failed.", errorMessage)
-            } else {
-                ShowToast( "error", "Something went wrong.", "Please try again later.")
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
             }
         }
         finally {
@@ -81,7 +83,15 @@ function EmailVerification() {
             await server.post('/api/identity/emailVerification');
             ShowToast("success", "Code Sent!", "A new verification code has been sent to your email.");
         } catch (error) {
-            ShowToast("error", "Sending Failed", error.response?.data?.error || "Failed to send code");
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         } finally {
             setIsResending(false);
         }

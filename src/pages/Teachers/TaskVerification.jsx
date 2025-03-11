@@ -38,14 +38,16 @@ function TaskVerification() {
             }
         } catch (error) {
             console.error("Error fetching tasks:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error fetching tasks", error.response.data.message.split("UERROR: "));
-                setTasks([]);
-            } else {
-                ShowToast("error", "Error fetching tasks", "Please try again.");
-                setTasks([]);
-            }
             setTasks([]);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
     };
 

@@ -54,9 +54,15 @@ const MsAuthLoginDialog = ({ isOpen, onClose, userId }) => {
             }
         } catch (error) {
             console.error(error)
-            const rawError = error.response?.data?.error || "Something went wrong.";
-            const errorMessage = rawError.startsWith("UERROR: ") ? rawError.substring(8) : rawError;
-            ShowToast("error", "Verification Failed", errorMessage);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         } finally {
             setIsLoading(false);
         }

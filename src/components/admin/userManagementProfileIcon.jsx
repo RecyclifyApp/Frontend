@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Image } from "@chakra-ui/react";
 import { CgProfile } from "react-icons/cg";
 import server from "../../../networking";
+import ShowToast from "../../Extensions/ShowToast";
 
 const UserManagamentProfilePictureIcon = ({ userId }) => {
     const [avatarUrl, setAvatarUrl] = useState(null);
@@ -22,6 +23,16 @@ const UserManagamentProfilePictureIcon = ({ userId }) => {
                     setAvatarUrl(null);
                 }
             } catch (error) {
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
+
                 console.error("Error fetching avatar:", error);
                 setAvatarUrl(null);
             }

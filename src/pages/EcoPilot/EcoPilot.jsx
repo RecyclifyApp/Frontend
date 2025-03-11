@@ -35,7 +35,15 @@ const EcoPilot = () => {
             setResponse(result.data);
         } catch (error) {
             console.error("Error fetching response:", error);
-            ShowToast("error","Error","An error occurred while fetching response");
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         } finally {
             setLoading(false);
         }

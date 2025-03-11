@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import BulletinCard from '../../components/parents/BulletinCard';
 import { useState, useEffect } from 'react';
 import server from "../../../networking"
+import ShowToast from '../../Extensions/ShowToast';
 
 function ParentsHomepage() {
     const { user, loaded, error } = useSelector((state) => state.auth);
@@ -29,6 +30,15 @@ function ParentsHomepage() {
                     setEvents(response.data.events);
                 } catch (err) {
                     setFetchError(err.message);
+                    if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                        if (error.response.data.error.startsWith("UERROR")) {
+                            ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                            return;
+                        } else {
+                            ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                            return;
+                        }
+                    }
                 } finally {
                     setLoading(false);
                 }

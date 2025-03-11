@@ -30,6 +30,15 @@ function AccountActionButtons({ userDetails }) {
                 }
             } catch (error) {
                 console.error("Error fetching user details:", error);
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             }
         };
 

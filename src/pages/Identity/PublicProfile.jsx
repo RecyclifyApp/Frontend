@@ -5,6 +5,7 @@ import { Box, Heading, Image, Text } from "@chakra-ui/react";
 import { CgProfile } from 'react-icons/cg';
 import { IoArrowBack } from 'react-icons/io5';
 import PublicAccountDetails from "../../components/identity/PublicAccountDetails";
+import ShowToast from "../../Extensions/ShowToast";
 
 function PublicProfile() {
     const { id } = useParams();
@@ -35,6 +36,15 @@ function PublicProfile() {
                 }
             } catch (error) {
                 console.error("Error fetching user details:", error);
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             }
         };
         fetchUserDetails();

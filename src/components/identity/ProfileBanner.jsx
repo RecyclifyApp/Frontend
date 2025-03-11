@@ -5,6 +5,7 @@ import EditAvatarDialog from './EditAvatarDialog';
 import EditBannerDialog from './EditBannerDialog';
 import { CgProfile } from 'react-icons/cg';
 import server from '../../../networking';
+import ShowToast from '../../Extensions/ShowToast';
 
 function ProfileBanner({ userDetails }) {
     const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
@@ -25,7 +26,16 @@ function ProfileBanner({ userDetails }) {
                 }
             } catch (error) {
                 console.error('Error fetching avatar:', error);
-                setAvatarUrl(null); 
+                setAvatarUrl(null);
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             }
         };
         fetchAvatar();
@@ -45,6 +55,15 @@ function ProfileBanner({ userDetails }) {
             } catch (error) {
                 console.error("Error fetching banner:", error);
                 setBannerUrl(null);
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             }
         };
         fetchBanner();

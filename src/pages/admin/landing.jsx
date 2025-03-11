@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { Box, Heading, Text, Button, SimpleGrid, Spinner } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
@@ -51,7 +52,15 @@ function Dashboard() {
 				],
 			});
 		} catch {
-			ShowToast("error", "Error", "Failed to fetch recycling data.");
+			if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
 		} finally {
 			setLoading(false);
 		}

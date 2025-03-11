@@ -34,11 +34,17 @@ function RedemptionHistoryDialog({ isOpen, onClose, userId }) {
             }
         } catch (error) {
             if (error.response?.data?.error) {
-                const errorMsg = error.response.data.error.startsWith("UERROR")
-                    ? error.response.data.error.substring("UERROR:".length)
-                    : error.response.data.error.substring("ERROR:".length);
-                ShowToast("error", errorMsg);
+                const errorMsg = error.response.data.error.startsWith("UERROR") ? error.response.data.error.substring("UERROR:".length) : error.response.data.error.substring("ERROR:".length);
                 setError(errorMsg);
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             } else {
                 setError("An error occurred while fetching rewards.");
             }

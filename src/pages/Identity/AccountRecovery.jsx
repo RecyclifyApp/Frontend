@@ -64,12 +64,15 @@ function AccountRecovery() {
 				navigate('/auth/login');
 			}
         } catch (error) {
-			if (error.response.status === 400) {
-				var errorMessage = error.response.data.error.substring("UERROR: ".length).trim();
-				ShowToast("error", errorMessage);
-			} else {
-            	ShowToast("error", "Failed to reset password. Please try again later.");
-			}
+			if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
         setResettingPassword(false);
     };

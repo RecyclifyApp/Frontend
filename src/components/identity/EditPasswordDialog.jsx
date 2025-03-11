@@ -45,7 +45,12 @@ function EditPasswordDialog({ isOpen, onClose }) {
                 }
             } else {
                 console.error(err);
-                ShowToast("error", "Something went wrong.", "Please try again later.");
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("ERROR")) {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             }
         }
     };

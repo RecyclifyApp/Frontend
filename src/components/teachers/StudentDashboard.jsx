@@ -178,14 +178,16 @@ function StudentDashboard({ classData, students }) {
             }
         } catch (error) {
             console.error("Error fetching students:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error fetching students", error.response.data.message.split("UERROR: "));
-                setStudentsList([]);
-            } else {
-                ShowToast("error", "Error fetching students", "Please try again.");
-                setStudentsList([]);
-            }
             setStudentsList([]);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
     };
 
@@ -213,12 +215,16 @@ function StudentDashboard({ classData, students }) {
             }
         } catch (error) {
             console.error('Error updating student: ', error.message);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error updating student", error.response.data.message.split("UERROR: "));
-            } else {
-                ShowToast("error", "Error updating student", "Please try again.");
-            }
             setOpen(true);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
     };
 
@@ -232,10 +238,14 @@ function StudentDashboard({ classData, students }) {
             }
         } catch (error) {
             console.error("Error deleting student.", error.message);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error deleting student", error.response.data.message.split("UERROR: "));
-            } else {
-                ShowToast("error", "Error deleting student", "Please try again.");
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
             }
         }
     };

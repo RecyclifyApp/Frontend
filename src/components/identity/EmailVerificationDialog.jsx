@@ -37,7 +37,12 @@ const EmailVerificationDialog = ({ isOpen, onClose, toggleEmailVerified }) => {
                 const errorMessage = rawErrorMessage.substring("UERROR: ".length).trim()
                 ShowToast("error", "Verification Failed.", errorMessage)
             } else {
-                ShowToast( "error", "Something went wrong.", "Please try again later.")
+                if (err.response && err.response.data && err.response.data.error && typeof err.response.data.error === "string") {
+                    if (err.response.data.error.startsWith("ERROR")) {
+                        ShowToast("error", err.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             }
         }
         finally {

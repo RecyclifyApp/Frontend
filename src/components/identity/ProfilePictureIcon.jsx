@@ -8,6 +8,7 @@ import { Button, Box, Image } from "@chakra-ui/react";
 import { CgProfile } from "react-icons/cg";
 import { MenuContent, MenuItem, MenuRoot, MenuTrigger } from "@/components/ui/menu";
 import server from "../../../networking";
+import ShowToast from "../../Extensions/ShowToast";
 
 const ProfilePictureIcon = ({ onLogout }) => {
     const dispatch = useDispatch();
@@ -33,6 +34,16 @@ const ProfilePictureIcon = ({ onLogout }) => {
                 console.error("Error fetching avatar:", error);
                 setAvatarUrl(null);
                 setRenderReady(true)
+
+                if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                    if (error.response.data.error.startsWith("UERROR")) {
+                        ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                        return;
+                    } else {
+                        ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                        return;
+                    }
+                }
             }
         };
         if (user) fetchAvatar();

@@ -25,14 +25,16 @@ function Landing() {
             }
         } catch (error) {
             console.error("Error fetching classes:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error fetching classes", error.response.data.message.split("UERROR: "));
-                setClasses([]);
-            } else {
-                ShowToast("error", "Error fetching classes", "Please try again.");
-                setClasses([]);
-            }
             setClasses([]);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
     };
 
@@ -69,10 +71,14 @@ function Landing() {
             }
         } catch (error) {
             console.error("Error deleting class:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error adding class", error.response.data.error.split("UERROR: "));
-            } else {
-                ShowToast("error", "Error adding class", "Please try again.");
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
             }
         }
     };
@@ -93,10 +99,14 @@ function Landing() {
             }
         } catch (error) {
             console.error("Error updating class:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error adding class", error.response.data.error.split("UERROR: "));
-            } else {
-                ShowToast("error", "Error adding class", "Please try again.");
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
             }
         }
     };
@@ -117,10 +127,14 @@ function Landing() {
             }
         } catch (error) {
             console.error("Error adding class:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error adding class", error.response.data.error.split("UERROR: "));
-            } else {
-                ShowToast("error", "Error adding class", "Please try again.");
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
             }
         }
     };

@@ -48,14 +48,16 @@ function ClassDashboard({ classData, students }) {
             }
         } catch (error) {
             console.error("Error fetching classes:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error fetching classes", error.response.data.message.split("UERROR: "));
-                setSchoolClassesData([]);
-            } else {
-                ShowToast("error", "Error fetching classes", "Please try again.");
-                setSchoolClassesData([]);
-            }
             setSchoolClassesData([]);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
     }
 
@@ -72,17 +74,17 @@ function ClassDashboard({ classData, students }) {
             }
         } catch (error) {
             console.error("Error fetching classes:", error);
-            if (error.response.status === 400) {
-                ShowToast("error", "Error fetching classes", error.response.data.message.split("UERROR: "));
-                setLastWeekPoints(0);
-                setClassPoints([]);
-            } else {
-                ShowToast("error", "Error fetching classes", "Please try again.");
-                setLastWeekPoints(0);
-                setClassPoints([]);
-            }
             setClassPoints([]);
             setLastWeekPoints(0);
+            if (error.response && error.response.data && error.response.data.error && typeof error.response.data.error === "string") {
+                if (error.response.data.error.startsWith("UERROR")) {
+                    ShowToast("error", error.response.data.error.substring("UERROR:".length));
+                    return;
+                } else {
+                    ShowToast("error", error.response.data.error.substring("ERROR:".length));
+                    return;
+                }
+            }
         }
     }
 
